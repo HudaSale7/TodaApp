@@ -22,9 +22,6 @@
 	4.  run the expo development server `npm start`
 	
 ## Video 
-
-https://github.com/HudaSale7/TodoApp/assets/109099521/d8484b6d-4e28-43ac-89df-115f74322a40
-
-
+https://github.com/HudaSale7/TodoApp/assets/109099521/7bb1df0a-1d35-47ab-82cf-baa8092f1f53
 
 
