@@ -47,6 +47,7 @@ const Home = () => {
   const handleAddTodo = async () => {
     if (todo.length > 0) {
       try {
+        
         //get token from async storage
         const token = await AsyncStorage.getItem("token");
         //send request to add todo
@@ -135,7 +136,7 @@ const Home = () => {
     try {
       // get token from async storage
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch(`http://${API_IP}/task/delete/${id}`, {
+      const response = await fetch(`http://${API_IP}/task/complete/${id}`, {
         method: "PUT",
         headers: {
           token,

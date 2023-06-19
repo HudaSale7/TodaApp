@@ -33,6 +33,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
+    
     try {
       const response = await fetch(`http://${API_IP}/auth/login`, {
         method: "POST",
@@ -42,7 +43,7 @@ const Login = () => {
         body: JSON.stringify({ userName, password }),
       });
       const data = await response.json();
-
+      
       if (!data.token) {
         throw data;
       }
@@ -55,6 +56,7 @@ const Login = () => {
       setSomethingWrong(false);
       setWrong(false);
     } catch (error) {
+      console.log(error);
       if (error.status === 422 || error.status === 401) {
         setWrongInfo(error.message);
         setSomethingWrong(false);

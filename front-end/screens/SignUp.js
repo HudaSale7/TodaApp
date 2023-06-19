@@ -21,6 +21,7 @@ const SignUp = () => {
   const navigation = useNavigation();
 
   const handleSignup = async () => {
+    
     try {
       const response = await fetch(`http://${API_IP}/auth/signup`, {
         method: "POST",
@@ -43,7 +44,7 @@ const SignUp = () => {
       setSomethingWrong(false);
       setWrong(false);
     } catch (error) {
-      console.log(error.status);
+      console.log(error);
       if (error.status === 422) {
         setWrongInfo(error.message);
         setSomethingWrong(false);

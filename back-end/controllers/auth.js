@@ -43,6 +43,7 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
+    console.log(req.body);
     const userName = req.body.userName;
     const password = req.body.password;
     try {
