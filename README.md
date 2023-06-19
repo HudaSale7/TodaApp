@@ -4,7 +4,7 @@
 
 * Expo React Native (mobile app)
 * Express.js (backend)
-* SQLITE (database)
+* SQLite (database)
 * Prisma (database ORM)
 
 ## How to run 
@@ -17,7 +17,8 @@
     
  2. **Frontend**
 	1. go to frontend folder `cd front-end`
-	2.  install required packages  ``npm install``
+	2. open .env file you will find the following key/value `API_IP=192.168.2.42:3000` change `192.168.2.42:3000` with your local machine IP which running the backend 
+	3.  install required packages  ``npm install``
 	4.  run the expo development server `npm start`
 	
 ## Video 
