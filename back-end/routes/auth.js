@@ -8,6 +8,7 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 
 router.post('/signup', [
+    //check if user name is valid and not already taken otherwise throw error
     body('userName').trim().toLowerCase()
         .custom((value, { req }) => {
         return prisma.user.findUnique({
@@ -19,7 +20,8 @@ router.post('/signup', [
                 return Promise.reject('user name already exists!');
             }
         });
-    }).isLength({ min: 3 }).withMessage('user name must be at least 3 characters long!'),
+        }).isLength({ min: 3 }).withMessage('user name must be at least 3 characters long!'),
+    //check if password is valid otherwise throw error
     body('password').trim().isLength({ min: 5 }).withMessage('password must be at least 5 characters long!')
 ], authController.signup);
 

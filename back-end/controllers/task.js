@@ -7,14 +7,8 @@ const prisma = new PrismaClient();
 exports.addTask = async (req, res, next) => {
     const content = req.body.content;
     const userId = req.userId;
-    const errors = validationResult(req);
     try {
-        if (!errors.isEmpty()) {
-            const error = new Error('validation failed!');
-            error.statusCode = 422;
-            error.message = errors.array()[0].msg;
-            throw error;
-        }
+        //check if user exists otherwise throw error
         const user = await prisma.user.findUnique({
             where: {
                 id: userId
@@ -48,6 +42,7 @@ exports.addTask = async (req, res, next) => {
 exports.getTasks = async (req, res, next) => {
     const userId = req.userId;
     try {
+        //check if user exists otherwise throw error
         const user = await prisma.user.findUnique({
             where: {
                 id: userId

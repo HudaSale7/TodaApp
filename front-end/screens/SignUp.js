@@ -1,36 +1,45 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from "@react-navigation/core";
+import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { API_IP } from "@env";
 
 const SignUp = () => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [wrongInfo, setWrongInfo] = useState('');
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [wrongInfo, setWrongInfo] = useState("");
   const [somethingWrong, setSomethingWrong] = useState(false);
   const [wrong, setWrong] = useState(false);
 
   const navigation = useNavigation();
 
-  const handleLogin = async () => {
-    userName === '' || password === '' ? setWrongInfo(true) : setWrongInfo(false);
+  const handleSignup = async () => {
     try {
-      const response = await fetch('http://192.168.2.235:3000/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userName, password }),
-    })
+      const response = await fetch(`http://${API_IP}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userName, password }),
+      });
       const data = await response.json();
 
       if (!data.token) {
         throw data;
       }
-      
-      await AsyncStorage.setItem('token', data.token);
-      navigation.navigate('Home');
-      setWrongInfo('');
+
+      //save token to async storage
+      await AsyncStorage.setItem("token", data.token);
+      //navigate to home
+      navigation.navigate("Home");
+      setWrongInfo("");
       setSomethingWrong(false);
       setWrong(false);
     } catch (error) {
@@ -39,116 +48,121 @@ const SignUp = () => {
         setWrongInfo(error.message);
         setSomethingWrong(false);
         setWrong(true);
-    } else if (error.status === 500) {
-        setWrongInfo('');
+      } else if (error.status === 500) {
+        setWrongInfo("");
         setSomethingWrong(true);
         setWrong(false);
-      } 
+      }
     }
-  }
+  };
 
+  //render signup form
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-    >
-      {wrong && <Text style={styles.wrong}>{ wrongInfo}</Text>}
-        {somethingWrong && <Text style={styles.wrong}>Something went wrong please try again</Text>}
+    <KeyboardAvoidingView style={styles.container}>
+      {wrong && <Text style={styles.wrong}>{wrongInfo}</Text>}
+      {somethingWrong && (
+        <Text style={styles.wrong}>Something went wrong please try again</Text>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="User Name"
           value={userName}
-          onChangeText={text => setUserName(text)}
+          onChangeText={(text) => setUserName(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={styles.button}
-        >
+        <TouchableOpacity onPress={handleSignup} style={styles.button}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
-        <Text style={styles.haveAccount}>Already have an account?
-        <TouchableOpacity>
-          <Text style={styles.haveAccountLink} onPress={() => navigation.navigate('Login')}> Login</Text>
+        <Text style={styles.haveAccount}>
+          Already have an account?
+          <TouchableOpacity>
+            <Text
+              style={styles.haveAccountLink}
+              onPress={() => navigation.navigate("Login")}
+            >
+              {" "}
+              Login
+            </Text>
           </TouchableOpacity>
         </Text>
-        
       </View>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;
 
+//styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputContainer: {
-    width: '80%'
+    width: "80%",
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
   },
   buttonContainer: {
-    width: '60%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#0782F9',
-    width: '100%',
+    backgroundColor: "#0782F9",
+    width: "100%",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 5,
   },
   buttonOutline: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     marginTop: 5,
-    borderColor: '#0782F9',
+    borderColor: "#0782F9",
     borderWidth: 2,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: '700',
+    color: "white",
+    fontWeight: "700",
     fontSize: 16,
   },
   haveAccount: {
-    fontWeight: '400',
+    fontWeight: "400",
     fontSize: 14,
     marginTop: 10,
   },
   haveAccountLink: {
-    color: '#0782F9',
-    fontWeight: '700',
+    color: "#0782F9",
+    fontWeight: "700",
     fontSize: 14,
   },
   buttonOutlineText: {
-    color: '#0782F9',
-    fontWeight: '700',
+    color: "#0782F9",
+    fontWeight: "700",
     fontSize: 16,
   },
   wrong: {
-    color: 'red',
-    fontWeight: '400',
+    color: "red",
+    fontWeight: "400",
     fontSize: 14,
     marginBottom: 10,
-  }
-})
+  },
+});

@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 exports.signup = async (req, res, next) => {
     try {
+        //check if validation failed and throw error
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const error = new Error('validation failed!');
@@ -16,6 +17,8 @@ exports.signup = async (req, res, next) => {
         }
         const userName = req.body.userName;
         const password = req.body.password;
+
+        //hashing password and saving user to database
         const hashedPassword = await bcrypt.hash(password, 12);
         const user = await prisma.user.create({
             data: {
@@ -28,6 +31,7 @@ exports.signup = async (req, res, next) => {
             error.statusCode = 500;
             throw error;
         }
+        //create token and send response
         const token = createToken(user);
         res.status(200).json({ token: token, userName: userName, id: user.id});
     } catch (error) {
@@ -42,6 +46,7 @@ exports.login = async (req, res, next) => {
     const userName = req.body.userName;
     const password = req.body.password;
     try {
+        //check if validation failed and throw error
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const error = new Error('validation failed!');
@@ -49,6 +54,8 @@ exports.login = async (req, res, next) => {
             error.message = errors.array()[0].msg;
             throw error;
         }
+
+        //check if user exists and password is correct otherwise throw error
         const user = await prisma.user.findUnique({
             where: {
                 userName: userName
@@ -59,6 +66,7 @@ exports.login = async (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
+        
         const isEqual = await bcrypt.compare(password, user.password);
         if (!isEqual) {
             const error = new Error('wrong password!');
@@ -75,6 +83,7 @@ exports.login = async (req, res, next) => {
     }
 }
 
+//create token function to be used in signup and login
 createToken = (user) => {
     return jwt.sign(
     {
