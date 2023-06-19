@@ -1,5 +1,12 @@
 # Todo App 
 
+## Environment
+
+* Expo React Native (mobile app)
+* Express.js (backend)
+* SQLITE (database)
+* Prisma (database ORM)
+
 ## How to run 
 
  1. **Backend** 
